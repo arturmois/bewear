@@ -1,7 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -23,25 +25,22 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
-const formSchema = z.object({
-  name: z
-    .string("Nome inválido!")
-    .trim()
-    .min(3, "Nome é obrigatório!"),
-  email: z.email("Email inválido!"),
-  password: z
-    .string("Senha inválida!")
-    .min(8, "Senha deve ter pelo menos 8 caracteres!"),
-  confirmPassword: z
-    .string("Senha inválida!")
-    .min(8, "Senha deve ter pelo menos 8 caracteres!"),
-}).refine((data) => data.password === data.confirmPassword, {
-  path: ["confirmPassword"],
-  message: "As senhas não coincidem!",
-});
+const formSchema = z
+  .object({
+    name: z.string("Nome inválido!").trim().min(3, "Nome é obrigatório!"),
+    email: z.email("Email inválido!"),
+    password: z
+      .string("Senha inválida!")
+      .min(8, "Senha deve ter pelo menos 8 caracteres!"),
+    confirmPassword: z
+      .string("Senha inválida!")
+      .min(8, "Senha deve ter pelo menos 8 caracteres!"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "As senhas não coincidem!",
+  });
 
 type FormValues = z.infer<typeof formSchema>;
 
@@ -83,7 +82,7 @@ const SignUpForm = () => {
   }
 
   return (
-    <Card>
+    <Card className="w-full max-w-sm">
       <CardHeader>
         <CardTitle>Cadastrar</CardTitle>
         <CardDescription>Crie uma conta para continuar</CardDescription>
