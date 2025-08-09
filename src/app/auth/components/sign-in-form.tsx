@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { authClient } from "@/lib/auth-client";
 
 const formSchema = z.object({
   email: z.email("Email inválido!"),
@@ -41,9 +42,17 @@ const SignInForm = () => {
     },
   });
 
-  function onSubmit(values: FormValues) {
-    console.log("submit");
-    console.log(values);
+  async function onSubmit(values: FormValues) {
+    try {
+      const { data, error } = await authClient.signIn.email({
+        email: values.email,
+        password: values.password,
+        rememberMe: true,
+        callbackURL: "/",
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   return (
