@@ -6,9 +6,7 @@ interface CategorySelectorProps {
   categories: (typeof categoryTable.$inferSelect)[];
 }
 
-export default function CategorySelector({
-  categories,
-}: CategorySelectorProps) {
+const CategorySelector = ({ categories }: CategorySelectorProps) => {
   return (
     <div className="rounded-3xl bg-[#F4EFFF] p-6">
       <div className="grid grid-cols-2 gap-3">
@@ -24,4 +22,6 @@ export default function CategorySelector({
       </div>
     </div>
   );
-}
+};
+
+export default CategorySelector;

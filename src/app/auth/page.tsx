@@ -1,10 +1,10 @@
-import { Header } from "@/components/common/header";
+import Header from "@/components/common/header";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import SignInForm from "./components/sign-in-form";
 import SignUpForm from "./components/sign-up-form";
 
-export default function AuthPage() {
+const AuthPage = () => {
   return (
     <>
       <Header />
@@ -24,4 +24,6 @@ export default function AuthPage() {
       </div>
     </>
   );
-}
+};
+
+export default AuthPage;
