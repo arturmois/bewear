@@ -4,6 +4,7 @@ import Image from "next/image";
 import CategorySelector from "@/components/common/category-selector";
 import Footer from "@/components/common/footer";
 import Header from "@/components/common/header";
+import PartnerBrands from "@/components/common/partner-brands";
 import ProductList from "@/components/common/product-list";
 import { db } from "@/db";
 import { productTable } from "@/db/schema";
@@ -21,6 +22,24 @@ const Home = async () => {
     orderBy: [desc(productTable.createdAt)],
   });
   const categories = await db.query.categoryTable.findMany();
+  const partnerBrands = [
+    {
+      name: "Nike",
+      image: "/nike.svg",
+    },
+    {
+      name: "Adidas",
+      image: "/adidas.svg",
+    },
+    {
+      name: "Puma",
+      image: "/puma.svg",
+    },
+    {
+      name: "New Balance",
+      image: "/newbalance.svg",
+    },
+  ];
   return (
     <>
       <Header />
@@ -35,6 +54,7 @@ const Home = async () => {
             className="h-auto w-full"
           />
         </div>
+        <PartnerBrands partnerBrands={partnerBrands} />
         <ProductList title="Mais vendidos" products={products} />
         <div className="px-4">
           <CategorySelector categories={categories} />
