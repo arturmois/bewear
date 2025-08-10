@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1754750175172,
-      "tag": "0000_misty_bucky",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1754750216007,
-      "tag": "0001_first_whiplash",
+      "when": 1754868106499,
+      "tag": "0000_handy_franklin_richards",
       "breakpoints": true
     }
   ]
