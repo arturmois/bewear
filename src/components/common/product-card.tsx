@@ -15,7 +15,7 @@ interface ProductCardProps {
 const ProductCard = ({ product, textContainerClassName }: ProductCardProps) => {
   const firstVariant = product.variants[0];
   return (
-    <Link href={`/product/${product.id}`}>
+    <Link href={`/product-variant/${firstVariant.slug}`}>
       <div className="flex flex-col gap-4">
         <Image
           src={firstVariant.imageUrl}
