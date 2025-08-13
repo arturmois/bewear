@@ -20,10 +20,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { shippingAddressTable } from "@/db/schema";
 import { useCreateShippingAddress } from "@/hooks/mutations/use-create-shipping-address";
 import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
 
-const Addresses = () => {
+type AddressesProps = {
+  shippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
+};
+
+const Addresses = ({ shippingAddresses }: AddressesProps) => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
   const schema = z.object({
     email: z.email("E-mail inválido"),
@@ -60,7 +65,9 @@ const Addresses = () => {
   });
 
   const createAddress = useCreateShippingAddress();
-  const { data: addresses } = useShippingAddresses();
+  const { data: addresses } = useShippingAddresses({
+    initialData: shippingAddresses,
+  });
   const onSubmit = async (values: z.infer<typeof schema>) => {
     await createAddress.mutateAsync(values, {
       onSuccess: () => {
