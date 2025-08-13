@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { type NumberFormatValues, PatternFormat } from "react-number-format";
+import { toast } from "sonner";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useCreateShippingAddress } from "@/hooks/mutations/use-create-shipping-address";
 
 const Addresses = () => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
@@ -31,10 +33,10 @@ const Addresses = () => {
       .regex(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, "CPF inválido"),
     phone: z.string().min(15, "Celular obrigatório"),
     zipCode: z.string().min(9, "CEP obrigatório"),
-    address: z.string().min(1, "Endereço obrigatório"),
+    street: z.string().min(1, "Endereço obrigatório"),
     number: z.string().min(1, "Número obrigatório"),
     complement: z.string().optional(),
-    district: z.string().min(1, "Bairro obrigatório"),
+    neighborhood: z.string().min(1, "Bairro obrigatório"),
     city: z.string().min(1, "Cidade obrigatória"),
     state: z.string().min(1, "Estado obrigatório"),
   });
@@ -47,17 +49,30 @@ const Addresses = () => {
       cpf: "",
       phone: "",
       zipCode: "",
-      address: "",
+      street: "",
       number: "",
       complement: "",
-      district: "",
+      neighborhood: "",
       city: "",
       state: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof schema>) => {
-    console.log(values);
+  const createAddress = useCreateShippingAddress();
+  const onSubmit = async (values: z.infer<typeof schema>) => {
+    await createAddress.mutateAsync(values, {
+      onSuccess: () => {
+        toast.success("Endereço criado com sucesso");
+        form.reset();
+        setSelectedAddress(null);
+      },
+      onError: (error) => {
+        toast.error("Erro ao criar endereço", {
+          description: error.message,
+        });
+        console.error(error);
+      },
+    });
   };
   return (
     <Card>
@@ -181,7 +196,7 @@ const Addresses = () => {
                   />
                   <FormField
                     control={form.control}
-                    name="address"
+                    name="street"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Endereço</FormLabel>
@@ -223,7 +238,7 @@ const Addresses = () => {
                   />
                   <FormField
                     control={form.control}
-                    name="district"
+                    name="neighborhood"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Bairro</FormLabel>
@@ -262,7 +277,11 @@ const Addresses = () => {
                   />
                 </div>
                 <div className="flex justify-end">
-                  <Button type="submit">Salvar endereço</Button>
+                  <Button type="submit" disabled={createAddress.isPending}>
+                    {createAddress.isPending
+                      ? "Salvando..."
+                      : "Salvar endereço"}
+                  </Button>
                 </div>
               </form>
             </Form>
