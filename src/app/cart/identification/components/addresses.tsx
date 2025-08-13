@@ -21,6 +21,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useCreateShippingAddress } from "@/hooks/mutations/use-create-shipping-address";
+import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
 
 const Addresses = () => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null);
@@ -59,6 +60,7 @@ const Addresses = () => {
   });
 
   const createAddress = useCreateShippingAddress();
+  const { data: addresses } = useShippingAddresses();
   const onSubmit = async (values: z.infer<typeof schema>) => {
     await createAddress.mutateAsync(values, {
       onSuccess: () => {
@@ -80,7 +82,25 @@ const Addresses = () => {
         <CardTitle>Identificação</CardTitle>
       </CardHeader>
       <CardContent>
-        <RadioGroup value={selectedAddress} onValueChange={setSelectedAddress}>
+        <RadioGroup
+          value={selectedAddress ?? undefined}
+          onValueChange={setSelectedAddress}
+        >
+          {addresses?.map((addr) => (
+            <Card key={addr.id}>
+              <CardContent>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value={addr.id} id={addr.id} />
+                  <Label htmlFor={addr.id} className="cursor-pointer">
+                    {addr.street}, {addr.number},{" "}
+                    {addr.complement ? `, ${addr.complement}` : ""}{" "}
+                    {addr.neighborhood}, {addr.city} - {addr.state} -{" "}
+                    {addr.zipCode}
+                  </Label>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
           <Card>
             <CardContent>
               <div className="flex items-center space-x-2">
