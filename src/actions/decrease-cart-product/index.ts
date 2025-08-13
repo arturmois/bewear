@@ -7,15 +7,12 @@ import { db } from "@/db";
 import { cartItemTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
-import {
-  DecreaseCartProductQuantitySchema,
-  decreaseCartProductQuantitySchema,
-} from "./schema";
+import { DecreaseCartProductSchema, decreaseCartProductSchema } from "./schema";
 
-export const decreaseCartProductQuantity = async ({
+export const decreaseCartProduct = async ({
   cartItemId,
-}: DecreaseCartProductQuantitySchema): Promise<void> => {
-  decreaseCartProductQuantitySchema.parse({ cartItemId });
+}: DecreaseCartProductSchema): Promise<void> => {
+  decreaseCartProductSchema.parse({ cartItemId });
   const session = await auth.api.getSession({
     headers: await headers(),
   });

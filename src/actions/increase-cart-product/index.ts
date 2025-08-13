@@ -7,10 +7,10 @@ import { db } from "@/db";
 import { cartItemTable, cartTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
-import { AddProductToCartSchema, addProductToCartSchema } from "./schema";
+import { IncreaseCartProductSchema, increaseCartProductSchema } from "./schema";
 
-export const addProductToCart = async (data: AddProductToCartSchema) => {
-  addProductToCartSchema.parse(data);
+export const increaseCartProduct = async (data: IncreaseCartProductSchema) => {
+  increaseCartProductSchema.parse(data);
   const session = await auth.api.getSession({
     headers: await headers(),
   });
