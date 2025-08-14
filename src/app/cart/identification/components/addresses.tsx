@@ -8,7 +8,6 @@ import { type NumberFormatValues, PatternFormat } from "react-number-format";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { getCart } from "@/actions/get-cart";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -32,7 +31,10 @@ type AddressesProps = {
   defaultSelectedAddress: string | null;
 };
 
-const Addresses = ({ shippingAddresses, defaultSelectedAddress }: AddressesProps) => {
+const Addresses = ({
+  shippingAddresses,
+  defaultSelectedAddress,
+}: AddressesProps) => {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(
     defaultSelectedAddress,
   );

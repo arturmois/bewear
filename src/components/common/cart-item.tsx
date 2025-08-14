@@ -29,9 +29,8 @@ const CartItem = ({
   quantity,
 }: CartItemProps) => {
   const removeProductFromCartMutation = useRemoveProductFromCart(id);
-  const increaseCartProductQuantityMutation = useIncreaseCartProduct(
-    productVariantId
-  );
+  const increaseCartProductQuantityMutation =
+    useIncreaseCartProduct(productVariantId);
   const decreaseCartProductQuantityMutation = useDecreaseCartProduct(id);
   const handleDeleteClick = () =>
     removeProductFromCartMutation.mutate(undefined, {
