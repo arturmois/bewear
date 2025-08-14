@@ -110,7 +110,7 @@ const Addresses = ({
           toast.success("Endereço selecionado com sucesso");
           router.push("/cart/confirmation");
         },
-        onError: (error) => {
+        onError: (error: Error) => {
           toast.error("Erro ao selecionar endereço", {
             description: error.message,
           });
@@ -154,7 +154,7 @@ const Addresses = ({
           <div className="mt-6 flex justify-end">
             <Button
               onClick={handleGoToPayment}
-              className="w-full"
+              className="w-full rounded-full"
               disabled={setCartShippingAddress.isPending}
             >
               {setCartShippingAddress.isPending
