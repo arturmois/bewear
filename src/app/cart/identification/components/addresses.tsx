@@ -26,6 +26,8 @@ import { useCreateShippingAddress } from "@/hooks/mutations/use-create-shipping-
 import { useSetCartShippingAddress } from "@/hooks/mutations/use-set-cart-shipping-address";
 import { useShippingAddresses } from "@/hooks/queries/use-shipping-addresses";
 
+import { formatAddress } from "../../helpers/address";
+
 type AddressesProps = {
   shippingAddresses: (typeof shippingAddressTable.$inferSelect)[];
   defaultSelectedAddress: string | null;
@@ -85,8 +87,6 @@ const Addresses = ({
         await setCartShippingAddress.mutateAsync({
           shippingAddressId: id,
         });
-        toast.success("Endereço selecionado com sucesso");
-        router.push("/cart/payment");
       },
       onError: (error) => {
         toast.error("Erro ao criar endereço", {
@@ -108,7 +108,7 @@ const Addresses = ({
       {
         onSuccess: () => {
           toast.success("Endereço selecionado com sucesso");
-          router.push("/cart/payment");
+          router.push("/cart/confirmation");
         },
         onError: (error) => {
           toast.error("Erro ao selecionar endereço", {
@@ -129,16 +129,13 @@ const Addresses = ({
           value={selectedAddress ?? undefined}
           onValueChange={setSelectedAddress}
         >
-          {addresses?.map((addr) => (
-            <Card key={addr.id}>
+          {addresses?.map((address) => (
+            <Card key={address.id}>
               <CardContent>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value={addr.id} id={addr.id} />
-                  <Label htmlFor={addr.id} className="cursor-pointer">
-                    {addr.street}, {addr.number},{" "}
-                    {addr.complement ? `, ${addr.complement}` : ""}{" "}
-                    {addr.neighborhood}, {addr.city} - {addr.state} -{" "}
-                    {addr.zipCode}
+                  <RadioGroupItem value={address.id} id={address.id} />
+                  <Label htmlFor={address.id} className="cursor-pointer">
+                    {formatAddress(address)}
                   </Label>
                 </div>
               </CardContent>
