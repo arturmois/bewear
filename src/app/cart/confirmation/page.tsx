@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { getCart } from "@/actions/get-cart";
 import Footer from "@/components/common/footer";
 import Header from "@/components/common/header";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -16,6 +15,7 @@ import { auth } from "@/lib/auth";
 
 import CartSummary from "../components/cart-summary";
 import { formatAddress } from "../helpers/address";
+import FinishOrderButton from "./components/finish-order-button";
 
 const ConfirmationPage = async () => {
   const session = await auth.api.getSession({
@@ -49,9 +49,7 @@ const ConfirmationPage = async () => {
             </Card>
           </CardContent>
           <CardFooter>
-            <Button className="w-full rounded-full" size="lg">
-              Finalizar compra
-            </Button>
+            <FinishOrderButton />
           </CardFooter>
         </Card>
         <CartSummary
