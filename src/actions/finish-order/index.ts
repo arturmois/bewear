@@ -36,14 +36,27 @@ export async function finishOrder() {
     0,
   );
   const order = await db.transaction(async (tx) => {
-    const shippingAddress = cart.shippingAddress!;
+    if (!cart.shippingAddress) {
+      throw new Error("Shipping address not found");
+    }
     const [order] = await tx
       .insert(orderTable)
       .values({
-        ...shippingAddress,
+        street: cart.shippingAddress.street,
+        number: cart.shippingAddress.number,
+        complement: cart.shippingAddress.complement,
+        neighborhood: cart.shippingAddress.neighborhood,
+        city: cart.shippingAddress.city,
+        state: cart.shippingAddress.state,
+        zipCode: cart.shippingAddress.zipCode,
+        country: cart.shippingAddress.country,
+        phone: cart.shippingAddress.phone,
+        document: cart.shippingAddress.document,
+        email: cart.shippingAddress.email,
+        recipientName: cart.shippingAddress.recipientName,
         userId: session.user.id,
         totalInCents,
-        shippingAddressId: shippingAddress.id,
+        shippingAddressId: cart.shippingAddress.id,
       })
       .returning();
     if (!order) {

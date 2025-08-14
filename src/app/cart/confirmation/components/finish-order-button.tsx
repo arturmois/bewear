@@ -2,6 +2,7 @@
 
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -15,15 +16,19 @@ import {
 import { useFinishOrder } from "@/hooks/mutations/use-finish-order";
 
 const FinishOrderButton = () => {
-  const [successDialogOpen, setSuccessDialogOpen] = useState(true);
+  const [successDialogOpen, setSuccessDialogOpen] = useState(false);
   const { mutate: finishOrder, isPending } = useFinishOrder();
+  const handleFinishOrder = () => {
+    finishOrder();
+    setSuccessDialogOpen(true);
+  };
   return (
     <>
       <Button
         className="w-full rounded-full"
         size="lg"
         disabled={isPending}
-        onClick={() => finishOrder()}
+        onClick={handleFinishOrder}
       >
         {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
         Finalizar compra
@@ -45,11 +50,11 @@ const FinishOrderButton = () => {
             compra no seu e-mail.
           </DialogDescription>
           <DialogFooter>
-            <Button className="w-full rounded-full" variant="outline">
-              Página inicial
+            <Button className="w-full rounded-full" variant="outline" asChild>
+              <Link href="/">Página inicial</Link>
             </Button>
-            <Button className="h-10 w-full rounded-full">
-              Ver meus pedidos
+            <Button className="h-10 w-full rounded-full" asChild>
+              <Link href="/orders">Ver meus pedidos</Link>
             </Button>
           </DialogFooter>
         </DialogContent>
