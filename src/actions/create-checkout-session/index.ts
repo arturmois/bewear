@@ -5,16 +5,24 @@ import { headers } from "next/headers";
 import Stripe from "stripe";
 
 import { db } from "@/db";
-import { orderItemTable, orderTable } from "@/db/schema";
+import {
+  cartItemTable,
+  cartTable,
+  orderItemTable,
+  orderTable,
+} from "@/db/schema";
 import { auth } from "@/lib/auth";
 
-import type { CreateCheckoutSessionSchema } from "./schema";
+import {
+  CreateCheckoutSessionSchema,
+  createCheckoutSessionSchema,
+} from "./schema";
 
 export const createCheckoutSession = async (
   data: CreateCheckoutSessionSchema,
 ) => {
   if (!process.env.STRIPE_SECRET_KEY) {
-    throw new Error("STRIPE_SECRET_KEY is not set");
+    throw new Error("Stripe secret key is not set");
   }
   const session = await auth.api.getSession({
     headers: await headers(),
@@ -22,7 +30,7 @@ export const createCheckoutSession = async (
   if (!session?.user) {
     throw new Error("Unauthorized");
   }
-  const { orderId } = data;
+  const { orderId } = createCheckoutSessionSchema.parse(data);
   const order = await db.query.orderTable.findFirst({
     where: eq(orderTable.id, orderId),
   });
@@ -35,11 +43,7 @@ export const createCheckoutSession = async (
   const orderItems = await db.query.orderItemTable.findMany({
     where: eq(orderItemTable.orderId, orderId),
     with: {
-      productVariant: {
-        with: {
-          product: true,
-        },
-      },
+      productVariant: { with: { product: true } },
     },
   });
   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -51,18 +55,21 @@ export const createCheckoutSession = async (
     metadata: {
       orderId,
     },
-    line_items: orderItems.map((orderItem) => ({
-      price_data: {
-        currency: "brl",
-        product_data: {
-          name: `${orderItem.productVariant.product.name} - ${orderItem.productVariant.name}`,
-          description: orderItem.productVariant.product.description,
-          images: [orderItem.productVariant.imageUrl],
+    line_items: orderItems.map((orderItem) => {
+      return {
+        price_data: {
+          currency: "brl",
+          product_data: {
+            name: `${orderItem.productVariant.product.name} - ${orderItem.productVariant.name}`,
+            description: orderItem.productVariant.product.description,
+            images: [orderItem.productVariant.imageUrl],
+          },
+          // Em centavos
+          unit_amount: orderItem.priceInCents,
         },
-        unit_amount: orderItem.priceInCents,
-      },
-      quantity: orderItem.quantity,
-    })),
+        quantity: orderItem.quantity,
+      };
+    }),
   });
   return checkoutSession;
 };
