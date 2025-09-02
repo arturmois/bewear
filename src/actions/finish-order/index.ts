@@ -35,7 +35,8 @@ export async function finishOrder() {
     (acc, item) => acc + item.productVariant.priceInCents * item.quantity,
     0,
   );
-  const order = await db.transaction(async (tx) => {
+  let orderId: string | undefined;
+  await db.transaction(async (tx) => {
     if (!cart.shippingAddress) {
       throw new Error("Shipping address not found");
     }
@@ -62,6 +63,7 @@ export async function finishOrder() {
     if (!order) {
       throw new Error("Order not created");
     }
+    orderId = order.id;
     const orderItemPayload: Array<typeof orderItemTable.$inferInsert> =
       cart.items.map((item) => ({
         orderId: order.id,
@@ -71,7 +73,9 @@ export async function finishOrder() {
       }));
     await tx.insert(orderItemTable).values(orderItemPayload);
     await tx.delete(cartTable).where(eq(cartTable.id, cart.id));
-    return order;
   });
-  return order;
+  if (!orderId) {
+    throw new Error("Order not created");
+  }
+  return { orderId };
 }

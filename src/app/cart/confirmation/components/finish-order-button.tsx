@@ -1,10 +1,12 @@
 "use client";
 
+import { loadStripe } from "@stripe/stripe-js";
 import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
+import { createCheckoutSession } from "@/actions/create-checkout-session";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,9 +19,23 @@ import { useFinishOrder } from "@/hooks/mutations/use-finish-order";
 
 const FinishOrderButton = () => {
   const [successDialogOpen, setSuccessDialogOpen] = useState(false);
-  const { mutate: finishOrder, isPending } = useFinishOrder();
-  const handleFinishOrder = () => {
-    finishOrder();
+  const finishOrderMutation = useFinishOrder();
+  const handleFinishOrder = async () => {
+    if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
+      throw new Error("Stripe public key is not set");
+    }
+    const { orderId } = await finishOrderMutation.mutateAsync();
+    const checkoutSession = await createCheckoutSession({ orderId });
+    if (!checkoutSession.id) {
+      throw new Error("Checkout session ID not found");
+    }
+    const stripe = await loadStripe(
+      process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,
+    );
+    if (!stripe) {
+      throw new Error("Stripe not found");
+    }
+    await stripe.redirectToCheckout({ sessionId: checkoutSession.id });
     setSuccessDialogOpen(true);
   };
   return (
@@ -27,10 +43,12 @@ const FinishOrderButton = () => {
       <Button
         className="w-full rounded-full"
         size="lg"
-        disabled={isPending}
+        disabled={finishOrderMutation.isPending}
         onClick={handleFinishOrder}
       >
-        {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+        {finishOrderMutation.isPending && (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        )}
         Finalizar compra
       </Button>
       <Dialog open={successDialogOpen} onOpenChange={setSuccessDialogOpen}>
