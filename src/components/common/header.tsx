@@ -1,6 +1,6 @@
 "use client";
 
-import { LogInIcon, LogOutIcon, MenuIcon } from "lucide-react";
+import { LogInIcon, LogOutIcon, MenuIcon, UserIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -8,6 +8,7 @@ import { authClient } from "@/lib/auth-client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -21,10 +22,15 @@ export const Header = () => {
   const { data: session } = authClient.useSession();
   return (
     <header className="flex items-center justify-between p-5">
+      <div className="hidden items-center gap-1 font-semibold md:flex">
+        <Button variant="ghost" size="icon">
+          <UserIcon size={20} />
+        </Button>
+        <h2 className="text-sm text-black">Olá, Satoshi!</h2>
+      </div>
       <Link href="/">
         <Image src="/logo.svg" alt="BEWEAR" width={100} height={26.14} />
       </Link>
-
       <div className="flex items-center gap-3">
         <Sheet>
           <SheetTrigger asChild>
