@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 
-import { increaseCartProduct } from "@/actions/increase-cart-product";
+import { addProductToCart } from "@/actions/add-cart-product";
 import { Button } from "@/components/ui/button";
 
 interface AddToCartButtonProps {
@@ -16,10 +16,10 @@ const AddToCartButton = ({
   quantity,
 }: AddToCartButtonProps) => {
   const queryClient = useQueryClient();
-  const { mutate: addToCart, isPending: isAddingToCart } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationKey: ["addProductToCart", productVariantId, quantity],
-    mutationFn: async () =>
-      increaseCartProduct({
+    mutationFn: () =>
+      addProductToCart({
         productVariantId,
         quantity,
       }),
@@ -32,14 +32,11 @@ const AddToCartButton = ({
       className="rounded-full"
       size="lg"
       variant="outline"
-      disabled={isAddingToCart}
-      onClick={() => addToCart()}
+      disabled={isPending}
+      onClick={() => mutate()}
     >
-      {isAddingToCart ? (
-        <Loader2 className="animate-spin" />
-      ) : (
-        "Adicionar ao carrinho"
-      )}
+      {isPending && <Loader2 className="animate-spin" />}
+      Adicionar à sacola
     </Button>
   );
 };

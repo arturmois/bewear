@@ -35,11 +35,16 @@ export const getCart = async () => {
         userId: session.user.id,
       })
       .returning();
-    return { ...newCart, items: [], totalInCents: 0, shippingAddress: null };
+    return {
+      ...newCart,
+      items: [],
+      totalPriceInCents: 0,
+      shippingAddress: null,
+    };
   }
   return {
     ...cart,
-    totalInCents: cart.items.reduce(
+    totalPriceInCents: cart.items.reduce(
       (acc, item) => acc + item.productVariant.priceInCents * item.quantity,
       0,
     ),

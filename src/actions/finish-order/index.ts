@@ -4,25 +4,31 @@ import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 
 import { db } from "@/db";
-import { cartTable, orderItemTable, orderTable } from "@/db/schema";
+import {
+  cartItemTable,
+  cartTable,
+  orderItemTable,
+  orderTable,
+} from "@/db/schema";
 import { auth } from "@/lib/auth";
 
-export async function finishOrder() {
+export const finishOrder = async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-  if (!session?.user) {
+  if (!session) {
     throw new Error("Unauthorized");
   }
+
   const cart = await db.query.cartTable.findFirst({
     where: eq(cartTable.userId, session.user.id),
     with: {
+      shippingAddress: true,
       items: {
         with: {
           productVariant: true,
         },
       },
-      shippingAddress: true,
     },
   });
   if (!cart) {
@@ -31,7 +37,7 @@ export async function finishOrder() {
   if (!cart.shippingAddress) {
     throw new Error("Shipping address not found");
   }
-  const totalInCents = cart.items.reduce(
+  const totalPriceInCents = cart.items.reduce(
     (acc, item) => acc + item.productVariant.priceInCents * item.quantity,
     0,
   );
@@ -43,39 +49,40 @@ export async function finishOrder() {
     const [order] = await tx
       .insert(orderTable)
       .values({
-        street: cart.shippingAddress.street,
-        number: cart.shippingAddress.number,
-        complement: cart.shippingAddress.complement,
-        neighborhood: cart.shippingAddress.neighborhood,
-        city: cart.shippingAddress.city,
-        state: cart.shippingAddress.state,
+        email: cart.shippingAddress.email,
         zipCode: cart.shippingAddress.zipCode,
         country: cart.shippingAddress.country,
         phone: cart.shippingAddress.phone,
         document: cart.shippingAddress.document,
-        email: cart.shippingAddress.email,
+        city: cart.shippingAddress.city,
+        complement: cart.shippingAddress.complement,
+        neighborhood: cart.shippingAddress.neighborhood,
+        number: cart.shippingAddress.number,
         recipientName: cart.shippingAddress.recipientName,
+        state: cart.shippingAddress.state,
+        street: cart.shippingAddress.street,
         userId: session.user.id,
-        totalInCents,
-        shippingAddressId: cart.shippingAddress.id,
+        totalInCents: totalPriceInCents,
+        shippingAddressId: cart.shippingAddress!.id,
       })
       .returning();
     if (!order) {
-      throw new Error("Order not created");
+      throw new Error("Failed to create order");
     }
     orderId = order.id;
-    const orderItemPayload: Array<typeof orderItemTable.$inferInsert> =
+    const orderItemsPayload: Array<typeof orderItemTable.$inferInsert> =
       cart.items.map((item) => ({
         orderId: order.id,
-        productVariantId: item.productVariantId,
+        productVariantId: item.productVariant.id,
         quantity: item.quantity,
         priceInCents: item.productVariant.priceInCents,
       }));
-    await tx.insert(orderItemTable).values(orderItemPayload);
+    await tx.insert(orderItemTable).values(orderItemsPayload);
     await tx.delete(cartTable).where(eq(cartTable.id, cart.id));
+    await tx.delete(cartItemTable).where(eq(cartItemTable.cartId, cart.id));
   });
   if (!orderId) {
-    throw new Error("Order not created");
+    throw new Error("Failed to create order");
   }
   return { orderId };
-}
+};

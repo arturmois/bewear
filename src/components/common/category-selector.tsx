@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import type { categoryTable } from "@/db/schema";
+import { categoryTable } from "@/db/schema";
 
 import { Button } from "../ui/button";
 

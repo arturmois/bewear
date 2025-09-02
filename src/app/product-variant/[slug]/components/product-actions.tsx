@@ -13,23 +13,26 @@ interface ProductActionsProps {
 
 const ProductActions = ({ productVariantId }: ProductActionsProps) => {
   const [quantity, setQuantity] = useState(1);
+
+  const handleDecrement = () => {
+    setQuantity((prev) => (prev > 1 ? prev - 1 : prev));
+  };
+
   const handleIncrement = () => {
     setQuantity((prev) => prev + 1);
   };
-  const handleDecrement = () => {
-    setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
-  };
+
   return (
     <>
       <div className="px-5">
         <div className="space-y-4">
-          <h3 className="text-medium">Quantidade</h3>
+          <h3 className="font-medium">Quantidade</h3>
           <div className="flex w-[100px] items-center justify-between rounded-lg border">
-            <Button variant="ghost" size="icon" onClick={handleDecrement}>
+            <Button size="icon" variant="ghost" onClick={handleDecrement}>
               <MinusIcon />
             </Button>
-            <span>{quantity}</span>
-            <Button variant="ghost" size="icon" onClick={handleIncrement}>
+            <p>{quantity}</p>
+            <Button size="icon" variant="ghost" onClick={handleIncrement}>
               <PlusIcon />
             </Button>
           </div>
@@ -40,8 +43,8 @@ const ProductActions = ({ productVariantId }: ProductActionsProps) => {
           productVariantId={productVariantId}
           quantity={quantity}
         />
-        <Button className="rounded-full" size="lg" variant="default">
-          Comprar
+        <Button className="rounded-full" size="lg">
+          Comprar agora
         </Button>
       </div>
     </>

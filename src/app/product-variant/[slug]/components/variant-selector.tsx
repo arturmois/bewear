@@ -4,31 +4,31 @@ import Link from "next/link";
 import { productVariantTable } from "@/db/schema";
 
 interface VariantSelectorProps {
+  selectedVariantSlug: string;
   variants: (typeof productVariantTable.$inferSelect)[];
-  currentVariantSlug: string;
 }
 
 const VariantSelector = ({
+  selectedVariantSlug,
   variants,
-  currentVariantSlug,
 }: VariantSelectorProps) => {
   return (
     <div className="flex items-center gap-4">
       {variants.map((variant) => (
         <Link
-          key={variant.id}
           href={`/product-variant/${variant.slug}`}
+          key={variant.id}
           className={
-            currentVariantSlug === variant.slug
+            selectedVariantSlug === variant.slug
               ? "border-primary rounded-xl border-2"
               : ""
           }
         >
           <Image
-            src={variant.imageUrl}
-            alt={variant.name}
             width={68}
             height={68}
+            src={variant.imageUrl}
+            alt={variant.name}
             className="rounded-xl"
           />
         </Link>

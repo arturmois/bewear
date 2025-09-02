@@ -12,8 +12,8 @@ import { Button } from "../ui/button";
 interface CartItemProps {
   id: string;
   productName: string;
-  productVariantName: string;
   productVariantId: string;
+  productVariantName: string;
   productVariantImageUrl: string;
   productVariantPriceInCents: number;
   quantity: number;
@@ -22,31 +22,40 @@ interface CartItemProps {
 const CartItem = ({
   id,
   productName,
-  productVariantName,
   productVariantId,
+  productVariantName,
   productVariantImageUrl,
   productVariantPriceInCents,
   quantity,
 }: CartItemProps) => {
   const removeProductFromCartMutation = useRemoveProductFromCart(id);
+  const decreaseCartProductQuantityMutation = useDecreaseCartProduct(id);
   const increaseCartProductQuantityMutation =
     useIncreaseCartProduct(productVariantId);
-  const decreaseCartProductQuantityMutation = useDecreaseCartProduct(id);
-  const handleDeleteClick = () =>
+  const handleDeleteClick = () => {
     removeProductFromCartMutation.mutate(undefined, {
-      onSuccess: () => toast.success("Produto removido do carrinho"),
-      onError: () => toast.error("Erro ao remover produto do carrinho"),
+      onSuccess: () => {
+        toast.success("Produto removido do carrinho.");
+      },
+      onError: () => {
+        toast.error("Erro ao remover produto do carrinho.");
+      },
     });
-  const handleIncrementQuantityClick = () =>
-    increaseCartProductQuantityMutation.mutate(undefined, {
-      onSuccess: () => toast.success("Produto adicionado ao carrinho"),
-      onError: () => toast.error("Erro ao adicionar produto ao carrinho"),
-    });
-  const handleDecreaseQuantityClick = () =>
+  };
+  const handleDecreaseQuantityClick = () => {
     decreaseCartProductQuantityMutation.mutate(undefined, {
-      onSuccess: () => toast.success("Produto removido do carrinho"),
-      onError: () => toast.error("Erro ao remover produto do carrinho"),
+      onSuccess: () => {
+        toast.success("Quantidade do produto diminuida.");
+      },
     });
+  };
+  const handleIncreaseQuantityClick = () => {
+    increaseCartProductQuantityMutation.mutate(undefined, {
+      onSuccess: () => {
+        toast.success("Quantidade do produto aumentada.");
+      },
+    });
+  };
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-4">
@@ -62,32 +71,32 @@ const CartItem = ({
           <p className="text-muted-foreground text-xs font-medium">
             {productVariantName}
           </p>
-          <div className="flex w-[100px] items-center justify-between rounded-lg border">
+          <div className="flex w-[100px] items-center justify-between rounded-lg border p-1">
             <Button
+              className="h-4 w-4"
               variant="ghost"
-              size="sm"
               onClick={handleDecreaseQuantityClick}
             >
               <MinusIcon />
             </Button>
-            <span>{quantity}</span>
+            <p className="text-xs font-medium">{quantity}</p>
             <Button
+              className="h-4 w-4"
               variant="ghost"
-              size="sm"
-              onClick={handleIncrementQuantityClick}
+              onClick={handleIncreaseQuantityClick}
             >
               <PlusIcon />
             </Button>
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-end justify-between gap-1">
-        <p className="text-sm font-semibold">
-          {formatCentsToBRL(productVariantPriceInCents * quantity)}
-        </p>
+      <div className="flex flex-col items-end justify-center gap-2">
         <Button variant="outline" size="icon" onClick={handleDeleteClick}>
           <TrashIcon />
         </Button>
+        <p className="text-sm font-bold">
+          {formatCentsToBRL(productVariantPriceInCents)}
+        </p>
       </div>
     </div>
   );

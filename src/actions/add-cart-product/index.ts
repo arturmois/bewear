@@ -7,10 +7,10 @@ import { db } from "@/db";
 import { cartItemTable, cartTable } from "@/db/schema";
 import { auth } from "@/lib/auth";
 
-import { IncreaseCartProductSchema, increaseCartProductSchema } from "./schema";
+import { AddProductToCartSchema, addProductToCartSchema } from "./schema";
 
-export const increaseCartProduct = async (data: IncreaseCartProductSchema) => {
-  increaseCartProductSchema.parse(data);
+export const addProductToCart = async (data: AddProductToCartSchema) => {
+  addProductToCartSchema.parse(data);
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -45,7 +45,9 @@ export const increaseCartProduct = async (data: IncreaseCartProductSchema) => {
   if (cartItem) {
     await db
       .update(cartItemTable)
-      .set({ quantity: cartItem.quantity + data.quantity })
+      .set({
+        quantity: cartItem.quantity + data.quantity,
+      })
       .where(eq(cartItemTable.id, cartItem.id));
     return;
   }

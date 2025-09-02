@@ -4,12 +4,12 @@ import { finishOrder } from "@/actions/finish-order";
 
 import { getUseCartQueryKey } from "../queries/use-cart";
 
-export const getFinishOrderMutationKey = () => ["finish-order"] as const;
+export const getUseFinishOrderMutationKey = () => ["finish-order"];
 
 export const useFinishOrder = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: getFinishOrderMutationKey(),
+    mutationKey: getUseFinishOrderMutationKey(),
     mutationFn: async () => {
       return await finishOrder();
     },
