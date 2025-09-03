@@ -8,7 +8,6 @@ import { authClient } from "@/lib/auth-client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
-import { Separator } from "../ui/separator";
 import {
   Sheet,
   SheetContent,

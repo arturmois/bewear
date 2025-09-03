@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 import CategorySelector from "@/components/common/category-selector";
 import Footer from "@/components/common/footer";
 import { Header } from "@/components/common/header";
