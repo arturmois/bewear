@@ -36,6 +36,11 @@ jobs:
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bewear_test
 
+      - name: Seed database
+        run: npx tsx src/db/seed.ts
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bewear_test
+
       - name: Run ESLint
         run: npm run lint
 
@@ -46,6 +51,12 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/bewear_test
+          BETTER_AUTH_SECRET: test-secret-key-for-ci
+          GOOGLE_CLIENT_ID: test-google-client-id
+          GOOGLE_CLIENT_SECRET: test-google-client-secret
+          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: pk_test_ci_key
+          STRIPE_SECRET_KEY: sk_test_ci_key
 
       - name: Check build output
         run: |
