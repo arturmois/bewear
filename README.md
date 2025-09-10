@@ -1,6 +1,6 @@
 # 🛍️ Bewear - E-commerce de Moda
 
-[![Deploy](https://img.shields.io/badge/Deploy-AWS%20SST-black?style=for-the-badge&logo=amazon-aws)](https://d208sz0c0l2ud8.cloudfront.net/)
+[![Deploy](https://img.shields.io/badge/Deploy-AWS%20SST-black?style=for-the-badge&logo=amazon-aws)](https://d1ogaetjvc72dh.cloudfront.net/)
 [![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-blue?style=for-the-badge&logo=postgresql)](https://postgresql.org/)

@@ -4,13 +4,13 @@
 export default $config({
   app(input) {
     return {
-      name: "bewear",
+      name: "bewear-ecommerce",
       removal: input?.stage === "production" ? "retain" : "remove",
       protect: ["production"].includes(input?.stage),
       home: "aws",
     };
   },
   async run() {
-    new sst.aws.Nextjs("Bewear - E-commerce de Moda");
+    new sst.aws.Nextjs("bewear-ecommerce");
   },
 });

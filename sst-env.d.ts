@@ -5,7 +5,7 @@
 
 declare module "sst" {
   export interface Resource {
-    "MyWeb": {
+    "bewear-ecommerce": {
       "type": "sst.aws.Nextjs"
       "url": string
     }
