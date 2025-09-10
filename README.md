@@ -60,6 +60,7 @@ Bewear é uma plataforma de e-commerce moderna e responsiva para moda, construí
 - **ESLint** - Linting de código
 - **Prettier** - Formatação de código
 - **Drizzle Kit** - Migrações de banco de dados
+- **Conventional Commits** - Padronização de mensagens de commit
 
 ## 📦 Instalação
 
@@ -184,9 +185,24 @@ O projeto pode ser deployado em qualquer plataforma que suporte Next.js:
 
 1. Fork o projeto
 2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+3. Commit suas mudanças seguindo o padrão Conventional Commits:
+   - `feat:` para novas funcionalidades
+   - `fix:` para correções de bugs
+   - `docs:` para documentação
+   - `style:` para formatação
+   - `refactor:` para refatoração
+   - `test:` para testes
+   - `chore:` para tarefas de manutenção
 4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
+
+### Exemplo de Commits
+
+```bash
+git commit -m "feat: add user authentication with BetterAuth"
+git commit -m "fix: resolve cart item quantity update issue"
+git commit -m "docs: update README with installation instructions"
+```
 
 ## 📝 Licença
 
