@@ -19,13 +19,18 @@ import { Cart } from "./cart";
 
 export const Header = () => {
   const { data: session } = authClient.useSession();
+  console.log(session?.user);
   return (
     <header className="flex items-center justify-between p-5">
       <div className="hidden items-center gap-1 font-semibold md:flex">
         <Button variant="ghost" size="icon">
           <UserIcon size={20} />
         </Button>
-        <h2 className="text-sm text-black">Olá, Seja bem-vindo!</h2>
+        <h2 className="text-sm text-black">
+          {session?.user?.name
+            ? `${session?.user?.name}, Seja bem-vindo!`
+            : "Olá, Seja bem-vindo!"}
+        </h2>
       </div>
       <Link href="/">
         <Image src="/logo.svg" alt="BEWEAR" width={100} height={26.14} />
@@ -47,9 +52,7 @@ export const Header = () => {
                   <div className="flex justify-between space-y-6">
                     <div className="flex items-center gap-3">
                       <Avatar>
-                        <AvatarImage
-                          src={session?.user?.image as string | undefined}
-                        />
+                        <AvatarImage src={session?.user?.image ?? ""} />
                         <AvatarFallback>
                           {session?.user?.name?.split(" ")?.[0]?.[0]}
                           {session?.user?.name?.split(" ")?.[1]?.[0]}
