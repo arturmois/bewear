@@ -25,7 +25,7 @@ export const Header = () => {
         <Button variant="ghost" size="icon">
           <UserIcon size={20} />
         </Button>
-        <h2 className="text-sm text-black">Olá, Satoshi!</h2>
+        <h2 className="text-sm text-black">Olá, Seja bem-vindo!</h2>
       </div>
       <Link href="/">
         <Image src="/logo.svg" alt="BEWEAR" width={100} height={26.14} />

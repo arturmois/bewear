@@ -80,7 +80,7 @@ const SignInForm = () => {
   };
   return (
     <>
-      <Card className="w-full">
+      <Card className="w-full md:w-[500px]">
         <CardHeader>
           <CardTitle>Entrar</CardTitle>
           <CardDescription>Faça login para continuar.</CardDescription>
